@@ -64,3 +64,14 @@ body {
   transform: rotateY(720deg) translateZ(100px) rotateX(144.73deg);
   border-bottom-color: blue;
 }
+
+
+@keyframes spin {
+  0% {
+    transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  }
+  100% {
+    transform: rotateX(360deg) rotateY(720deg) rotateZ(1080deg);
+  }
+}
+
