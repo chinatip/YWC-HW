@@ -65,6 +65,38 @@ body {
   border-bottom-color: blue;
 }
 
+.wrap:hover .solid .side:nth-child(1) {
+  transform: rotateY(90deg) translateZ(200px) rotateX(35.27deg);
+  border-bottom-color: red;
+}
+.wrap:hover .solid .side:nth-child(2) {
+  transform: rotateY(180deg) translateZ(200px) rotateX(35.27deg);
+  border-bottom-color: brown;
+}
+.wrap:hover .solid .side:nth-child(3) {
+  transform: rotateY(270deg) translateZ(200px) rotateX(35.27deg);
+  border-bottom-color: green;
+}
+.wrap:hover .solid .side:nth-child(4) {
+  transform: rotateY(360deg) translateZ(200px) rotateX(35.27deg);
+  border-bottom-color: orange;
+}
+.wrap:hover .solid .side:nth-child(5) {
+  transform: rotateY(450deg) translateZ(200px) translateY(200px) rotateX(144.73deg);
+  border-bottom-color: black;
+}
+.wrap:hover .solid .side:nth-child(6) {
+  transform: rotateY(540deg) translateZ(200px) translateY(200px) rotateX(144.73deg);
+  border-bottom-color: pink;
+}
+.wrap:hover .solid .side:nth-child(7) {
+  transform: rotateY(630deg) translateZ(200px) translateY(200px) rotateX(144.73deg);
+  border-bottom-color: purple;
+}
+.wrap:hover .solid .side:nth-child(8) {
+  transform: rotateY(720deg) translateZ(200px) translateY(200px) rotateX(144.73deg);
+  border-bottom-color: blue;
+}
 
 @keyframes spin {
   0% {
@@ -75,3 +107,10 @@ body {
   }
 }
 
+.solid > .side {
+  transition: transform 0.5s ease-in;
+}
+
+.solid:hover {
+  animation: spin 30s infinite linear;
+}
