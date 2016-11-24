@@ -5,7 +5,7 @@
 	<link rel="stylesheet" type="text/css" href="main.css">
 </head>
 <body>
-	<div class="wrap">
+	<div class="wrap" onclick="openBox()">
 		<div class="solid" id="box">
 		  <div class="side"></div>
 		  <div class="side"></div>
@@ -17,5 +17,26 @@
 		  <div class="side"></div>
 		</div>
 	</div>
+	<script>
+		function openBox() {
+			var x = document.getElementsByClassName("side");
+			x[0].style.transform = "translateX(-2400px) translateY(4400px)";
+			x[1].style.transform = "translateZ(3300px) ";
+			x[2].style.transform = "translateZ(1200px) ";
+			x[3].style.transform = "translateZ(7100px) ";
+			x[4].style.transform = "translateZ(-2100px) translateY(2400px) ";
+			x[5].style.transform = "translateZ(6200px) translateY(4800px) ";
+			x[6].style.transform = "translateZ(-3300px) translateY(4200px) ";
+			x[7].style.transform = "translateZ(-2400px) translateY(4500px) ";
+			setTimeout(function(){ removeElementsByClass("solid"); }, 1000);
+		}
+
+		function removeElementsByClass(className){
+		    var elements = document.getElementsByClassName(className);
+		    while(elements.length > 0){
+		        elements[0].parentNode.removeChild(elements[0]);
+		    }
+		}
+	</script>
 </body>
 </html>
