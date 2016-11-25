@@ -11,9 +11,8 @@
 			<div class="LEDMenu"></div>
 				<button onclick="LEDBoard()">LED</button>
 				<button onclick="randomColorLED()">Random color</button>
-				<input type="text" value="#" name="colorLED" id="LEDcolor" 
-				onkeydown="if (event.keyCode == 13) document.getElementById('changeLEDColor').click()">
-	            <button type="button" id="changeLEDColor" onclick="changeLEDColor()">GO</button>
+				<input type="color" value="#40c744" name="colorLED" id="LEDcolor" 
+				onChange="onChangeColor()">
 			</div>
 			<button onclick="WaveBoard()">Wave Board</button>
 			<button onclick="randomBoard()">Random Board</button>
@@ -105,7 +104,7 @@
 		function LEDBoard() {
 			var rowDiv = document.getElementsByClassName("row");
 			if (isRandomColorLED) {
-				var LEDcolor = getRandomColor();
+				LEDcolor = getRandomColor();
 				isRandomColorLED = false;
 			}
 			if (!isUsingLEDBoard) {
@@ -164,7 +163,7 @@
 			}
 		}
 
-		function changeLEDColor(color){
+		function onChangeColor(color){
 			LEDcolor = document.getElementById('LEDcolor').value;
 			isUsingLEDBoard = false;
 			LEDBoard();
@@ -226,25 +225,30 @@
 			}
 			flipped[r][c] = "I";
 			var sum = 1;
-			var color = getRandomColor();
-			var randomColor = color;
-			document.getElementsByClassName("row")[r].childNodes[c].style.background = randomColor;
+			var randomColor = getRandomColor();
+			if (checkShape(r, c))
+				document.getElementsByClassName("row")[r].childNodes[c].style.background = randomColor;
+
 			setTimeout(
 				function(){
        				if (r - 1 >= 0) {
-						document.getElementsByClassName("row")[r - 1].childNodes[c].style.background = randomColor;	
+						if (checkShape(r - 1, c))
+							document.getElementsByClassName("row")[r - 1].childNodes[c].style.background = randomColor;	
 						sum += recursiveFlipBoard(r - 1, c);
 					}
 					if (r + 1 <= row) {
-						document.getElementsByClassName("row")[r + 1].childNodes[c].style.background = randomColor;
+						if (checkShape(r + 1, c))
+							document.getElementsByClassName("row")[r + 1].childNodes[c].style.background = randomColor;
 						sum += recursiveFlipBoard(r + 1, c);
 					}
 					if (c - 1 >= 0) {
-						document.getElementsByClassName("row")[r].childNodes[c - 1].style.background = randomColor;
+						if (checkShape(r, c - 1))
+							document.getElementsByClassName("row")[r].childNodes[c - 1].style.background = randomColor;
 						sum += recursiveFlipBoard(r, c - 1);
 					}
 					if (c + 1 <= col) {
-						document.getElementsByClassName("row")[r].childNodes[c + 1].style.background = randomColor;
+						if (checkShape(r, c + 1))
+							document.getElementsByClassName("row")[r].childNodes[c + 1].style.background = randomColor;
 						sum += recursiveFlipBoard(r, c + 1);
 					}
        			}, (100)
