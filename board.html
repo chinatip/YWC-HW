@@ -10,6 +10,7 @@
 		<div class="menu">
 			<div class="LEDMenu"></div>
 				<button onclick="LEDBoard()">LED</button>
+				<button onclick="randomColorLED()">Random color</button>
 				<input type="text" value="#" name="colorLED" id="LEDcolor" 
 				onkeydown="if (event.keyCode == 13) document.getElementById('changeLEDColor').click()">
 	            <button type="button" id="changeLEDColor" onclick="changeLEDColor()">GO</button>
@@ -18,6 +19,7 @@
 			<button onclick="randomBoard()">Random Board</button>
 			<button onclick="flipBoard()">Flip Board</button>
 			<button onclick="swapBoard()">Swap Board</button>
+			<button onclick="clearAll()">Clear All</button>
 			<div class="drawMenu">
 				<button onclick="drawBoard()">Draw</button>
 				<button onclick="saveBoard()">Save</button>
@@ -27,10 +29,10 @@
 	<script type="text/javascript">
 		var colorOnClick = "pink";
 		var LEDcolor = "green";
-		var isDraw = false;
 		var isUsingWaveBoard = false;
 		var isUsingLEDBoard = false;
 		var isUsingRandomBoard = false;
+		var isRandomColorLED = false;
 		var flipped = [];
 		var row = 10;
 		var col = 30;
@@ -72,9 +74,10 @@
 				for (var j = 0; j < col; j++) {
 					var box = document.getElementsByClassName("row")[i].childNodes;
 					box[j].addEventListener("click", 
-						function (boxID) {
-							document.getElementById(boxID).style.animation = "flash 1s 1 linear";
-						});
+						function () {
+							alert("You click me");
+							// document.getElementById(boxID).style.animation = "flash 1s 1 linear";
+					});
 				}
 			}
 		}
@@ -93,7 +96,7 @@
 					var pos = shape[i][j];
 					var box = document.getElementsByClassName("row")[i].childNodes;
 					if(pos == 1){
-						box[j].style.background = "green";
+						box[j].style.background = "red";
 					} else {
 						box[j].style.background = "black";
 					}
@@ -104,6 +107,9 @@
 
 		function LEDBoard() {
 			var rowDiv = document.getElementsByClassName("row");
+			if(isRandomColorLED) {
+				var LEDcolor = getRandomColor();
+			}
 			if(!isUsingLEDBoard) {
 				for (var i = 0; i < row; i++) {
 					for (var j = 0; j < col; j++) {
@@ -125,6 +131,12 @@
 				}
 			}
 			
+		}
+
+		function randomColorLED() {
+			isRandomColorLED = true;
+			isUsingLEDBoard = false;
+			LEDBoard();
 		}
 
 		function WaveBoard() {
@@ -184,8 +196,7 @@
 			} else {
 				isUsingRandomBoard = false;
 				var i = 0;
-				clearTimeout(randomBackground);
-				
+				window.clearTimeout(randomBackground);
 			}
 		}
 
@@ -252,9 +263,18 @@
 			}
 			render();
 		}
+
+		function clearAll() {
+			isUsingWaveBoard = true;
+			isUsingLEDBoard = true;
+			WaveBoard();
+			LEDBoard();
+			render();
+		}
+
 		createBoard();
 		// addClickListener();
-		render(shape, "red");
+		render();
 	</script>
 </body>
 </html>
