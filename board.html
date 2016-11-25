@@ -14,8 +14,10 @@
 				onkeydown="if (event.keyCode == 13) document.getElementById('changeLEDColor').click()">
 	            <button type="button" id="changeLEDColor" onclick="changeLEDColor()">GO</button>
 			</div>
-			<button onclick="WaveBoard()">WaveBoard</button>
-			<button onclick="randomBoard()">RandomBoard</button>
+			<button onclick="WaveBoard()">Wave Board</button>
+			<button onclick="randomBoard()">Random Board</button>
+			<button onclick="flipBoard()">Flip Board</button>
+			<button onclick="swapBoard()">Swap Board</button>
 			<div class="drawMenu">
 				<button onclick="drawBoard()">Draw</button>
 				<button onclick="saveBoard()">Save</button>
@@ -26,8 +28,9 @@
 		var colorOnClick = "pink";
 		var LEDcolor = "green";
 		var isDraw = false;
-		var isWaving = false;
-		var isBlinking = false;
+		var isUsingWaveBoard = false;
+		var isUsingLEDBoard = false;
+		var isUsingRandomBoard = false
 		var row = 10;
 		var col = 30;
 		var shape = [
@@ -83,13 +86,15 @@
 
 		}
 
-		function render(shape, color) {
+		function render() {
 			for (var i = 0; i < row; i++) {
 				for (var j = 0; j < col; j++) {
-					var pos =shape[i][j];
+					var pos = shape[i][j];
 					var box = document.getElementsByClassName("row")[i].childNodes;
 					if(pos == 1){
-						box[j].style.background=color;
+						box[j].style.background = "green";
+					} else {
+						box[j].style.background = "black";
 					}
 
 				}
@@ -98,7 +103,7 @@
 
 		function LEDBoard() {
 			var rowDiv = document.getElementsByClassName("row");
-			if(!isBlinking) {
+			if(!isUsingLEDBoard) {
 				for (var i = 0; i < row; i++) {
 					for (var j = 0; j < col; j++) {
 						var pos =shape[i][j];
@@ -108,10 +113,10 @@
 						}
 
 					}
-					isBlinking = true;
+					isUsingLEDBoard = true;
 				}
 			} else {
-				isBlinking = false;
+				isUsingLEDBoard = false;
 				for (var i = 0; i < row; i++) {
 					for (var j = 0; j < col; j++) {
 						rowDiv[i].childNodes[j].style.animation = "";
@@ -123,7 +128,7 @@
 
 		function WaveBoard() {
 			var rowDiv = document.getElementsByClassName("row");
-			if (!isWaving){
+			if (!isUsingWaveBoard){
 				for (var i = 0; i < row; i++) {
 				   	for (var j = 0; j < col; j++) {
 						(function(i,j) {
@@ -136,9 +141,9 @@
 				   		})(i,j);
 					}
 				}
-				isWaving = true;
+				isUsingWaveBoard = true;
 			} else {
-				isWaving = false;
+				isUsingWaveBoard = false;
 				for (var i = 0; i < row; i++) {
 				   	for (var j = 0; j < col; j++) {
 						rowDiv[i].style.animation = "";
@@ -150,28 +155,39 @@
 
 		function changeLEDColor(color){
 			LEDcolor = document.getElementById('LEDcolor').value;
-			isBlinking = false;
+			isUsingLEDBoard = false;
 			LEDBoard();
 		}
-		createBoard();
-		// addClickListener();
-		render(shape, "red");
 
 		function randomBoard() {
-			var i = 0;
-			while (i<=1000) {
-
-				(function(i) {
-					setTimeout(function(){
-		       			var randomRow = Math.floor(Math.random() * row);
-						var randomCol = Math.floor(Math.random() * col);
-						var rowDiv = document.getElementsByClassName("row");
-						rowDiv[randomRow].childNodes[randomCol].style.background = getRandomColor();
-		       			}, (100 * i)
-		       		);
-				})(i);
-				i++;
-			}	
+			var randomBackground;
+			if(!isUsingRandomBoard) {
+				var i = 0;
+				while (i<=1000) {
+					(function(i) {
+						randomBackground = setTimeout(
+							function(){
+				       			var randomRow = Math.floor(Math.random() * row);
+								var randomCol = Math.floor(Math.random() * col);
+								var rowDiv = document.getElementsByClassName("row");
+								if(randomRow != 1 && randomCol != 1) {
+									rowDiv[randomRow].childNodes[randomCol].style.background = getRandomColor();
+									console.log(randomRow+", "+randomCol);
+								}
+			       			}, (100 * i)
+			       		);
+					})(i);
+					i++;
+				}
+				isUsingRandomBoard = true;
+			} else {
+				isUsingRandomBoard = false;
+				var i = 0;
+				while (i<=1000) {
+					clearTimeout(randomBackground);
+					i++;
+				}
+			}
 		}
 
 		function getRandomColor() {
@@ -183,6 +199,57 @@
 		    return color;
 		}
 
+		function flipBoard() {
+			var randomRow = Math.floor(Math.random() * row);
+			var randomCol = Math.floor(Math.random() * col);
+			var sum = recursiveFlipBoard(randomRow, randomCol);
+		}
+
+		var visited = [];
+		for(var x = 0; x < row; x++){
+		    visited[x] = [];       
+		}
+		function recursiveFlipBoard(r, c){
+			if(visited[r][c] == "I") {
+				return 0;
+			}
+			visited[r][c] = "I";
+			var sum = 1;
+			document.getElementsByClassName("row")[r].childNodes[c].style.background = "orange";
+			setTimeout(
+				function(){
+       				if (r-1>=0) {
+						document.getElementsByClassName("row")[r-1].childNodes[c].style.background = "pink";	
+						sum += recursiveFlipBoard(r-1, c);
+					}
+					if (r+1<=row) {
+						document.getElementsByClassName("row")[r+1].childNodes[c].style.background = "yellow";
+						sum += recursiveFlipBoard(r+1, c);
+					}
+					if (c-1>=0) {
+						document.getElementsByClassName("row")[r].childNodes[c-1].style.background = "purple";
+						sum += recursiveFlipBoard(r, c-1);
+					}
+					if (c+1<=col) {
+						document.getElementsByClassName("row")[r].childNodes[c+1].style.background = "blue";
+						sum += recursiveFlipBoard(r, c+1);
+					}
+       			}, (100)
+       		);		
+			return sum;
+		}
+		function swapBoard() {
+			for (var i = 0; i < shape.length; i++) {
+				for (var j = 0; j < shape[0].length; j++) {
+					if(shape[i][j] == 0) shape[i][j] = 1;
+					else shape[i][j] = 0;
+				}
+			}
+			render();
+		}
+		createBoard();
+		// addClickListener();
+		render(shape, "red");
 	</script>
 </body>
 </html>
