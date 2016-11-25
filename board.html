@@ -8,11 +8,15 @@
 	<div class="board"></div>
 	<div class="menu">
 		<div class="LEDMenu"></div>
-			<button type="button" onclick="LEDBoard()">LED</button><br>
+			<button onclick="LEDBoard()">LED</button>
 			<input type="text" value="#" name="colorLED" id="LEDcolor" 
 			onkeydown="if (event.keyCode == 13) document.getElementById('changeLEDColor').click()">
-			<br>
             <button type="button" id="changeLEDColor" onclick="changeLEDColor()">GO</button>
+		</div>
+		<button onclick="WaveBoard()">WaveBoard</button>
+		<div class="drawMenu">
+			<button onclick="drawBoard()">Draw</button>
+			<button onclick="saveBoard()">Save</button>
 		</div>
 	</div>
 
@@ -20,8 +24,8 @@
 		var colorOnClick = "pink";
 		var LEDcolor = "green";
 		var isDraw = false;
-		var row = 10;
-		var col = 30;
+		var row = 7;
+		var col = 15;
 		var shape = [
 			//7*15
 			"000000000000000",
@@ -34,29 +38,49 @@
 		];
 
 		function createBoard() {
+			var ID = "box"; 
 			for (var i = 0; i < row; i++) {
 				var rowDiv = document.createElement("div");
+				ID += i;
 				rowDiv.className = "row";
 				for (var j = 0; j < col; j++) {
+					var boxID = ID + j +"";
 					var boxDiv = document.createElement("div");
 					boxDiv.className = "box";
-					boxDiv.addEventListener("click", clickBox(i,j));
+					boxDiv.id = boxID;
 					rowDiv.appendChild(boxDiv);  
 				}
 				document.getElementsByClassName("board")[0].appendChild(rowDiv);
+				ID = "box";
 			}
-			isDraw = true;
 		}
 
-		function drawShape(shape, type, color) {
-			for (var i = 0; i < shape.length; i++) {
+		function addClickListener() {
+			for (var i = 0; i < row; i++) {
+				for (var j = 0; j < col; j++) {
+					var box = document.getElementsByClassName("row")[i].childNodes;
+					box[j].addEventListener("click", 
+						function (boxID) {
+							document.getElementById(boxID).style.animation = "flash 1s 1 linear";
+						});
+				}
+			}
+		}
+
+		function drawBoard() {
+
+		}
+
+		function saveBoard() {
+
+		}
+
+		function render(shape, color) {
+			for (var i = 0; i < row; i++) {
 				var rowtemp = shape[i];
-				for (var j = 0; j < rowtemp.length; j++) {
+				for (var j = 0; j < col; j++) {
 					var pos = rowtemp.charAt(j);
 					var box = document.getElementsByClassName("row")[i].childNodes;
-					if(type == "LED") {
-						box[j].className += " LED";
-					}
 					if(pos == 1){
 						box[j].style.background=color;
 					}
@@ -65,16 +89,47 @@
 			}
 		}
 
-		//Fixed
-		function clickBox(i,j) {
-			if(isDraw) {
-				var a = document.getElementsByClassName("row")[i].childNodes;
-						a[j].style.background = colorOnClick;
+		function LEDBoard() {
+			for (var i = 0; i < row; i++) {
+				var rowtemp = shape[i];
+				for (var j = 0; j < col; j++) {
+					var pos = rowtemp.charAt(j);
+					var box = document.getElementsByClassName("row")[i].childNodes;
+					if(pos == 1){
+						box[j].style.background=LEDcolor;
+						box[j].style.animation = "flash 1s infinite linear";
+					}
+
+				}
 			}
 		}
 
-		function LEDBoard() {
-			drawShape(shape, "LED", LEDcolor);
+		function WaveBoard() {
+			var rowDiv = document.getElementsByClassName("row");
+			for (var i = 0; i < row; i++) {
+			   	for (var j = 0; j < col; j++) {
+					(function(i,j) {
+						setTimeout(function(){
+			       			rowDiv[i].style.animation = "bounce 2s infinite linear";}, (100 * i)
+			       		);
+			       		setTimeout(function(){
+			       			rowDiv[i].childNodes[j].style.animation = "bounce 2s 2 linear";}, (500 * j)
+			       		);
+			   		})(i,j);
+				}
+			}
+
+			// for (var i = 0; i < row; i++) {
+			// 	var rowDiv = document.getElementsByClassName("row")[i];
+
+			// 	var wait = function(){
+			// 		rowDiv.style.animation = "bounce 1s infinite linear";
+			// 	}
+			// 	setInterval( wait, 2000 );
+			// 	for (var j = 0; j < col; j++) {
+			// 		// rowDiv.childNodes[j].style.animation = "bounce 2s infinite linear";
+			// 	}
+			// }
 		}
 
 		function changeLEDColor(color){
@@ -82,7 +137,8 @@
 			LEDBoard();
 		}
 		createBoard();
-		drawShape(shape, "default", "red");
+		addClickListener();
+		render(shape, "red");
 	</script>
 </body>
 </html>
