@@ -295,23 +295,15 @@
 		}
 
 		function shiftUp() {
-			var temp = shape;
 			for (var i = 0; i < row; i++) {
-				if (i == row-1) {
-					shape[i] = temp[0];
-				}
-				shape[i] = temp[i+1];
+				
 			}
 			render();
 		}
 
 		function shiftDown() {
-			var temp = shape;
 			for (var i = 0; i < row; i++) {
-				if (i == 0) {
-					shape[i] = temp[row-1];
-				}
-				shape[i] = temp[i-1];
+				
 			}
 			render();
 		}
