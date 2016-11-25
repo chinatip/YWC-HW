@@ -30,7 +30,8 @@
 		var isDraw = false;
 		var isUsingWaveBoard = false;
 		var isUsingLEDBoard = false;
-		var isUsingRandomBoard = false
+		var isUsingRandomBoard = false;
+		var flipped = [];
 		var row = 10;
 		var col = 30;
 		var shape = [
@@ -183,10 +184,8 @@
 			} else {
 				isUsingRandomBoard = false;
 				var i = 0;
-				while (i<=1000) {
-					clearTimeout(randomBackground);
-					i++;
-				}
+				clearTimeout(randomBackground);
+				
 			}
 		}
 
@@ -202,36 +201,42 @@
 		function flipBoard() {
 			var randomRow = Math.floor(Math.random() * row);
 			var randomCol = Math.floor(Math.random() * col);
+			flipped = [];
+				for(var x = 0; x < row; x++){
+				    flipped[x] = [];       
+			}
 			var sum = recursiveFlipBoard(randomRow, randomCol);
 		}
 
-		var visited = [];
+		var flipped = [];
 		for(var x = 0; x < row; x++){
-		    visited[x] = [];       
+		    flipped[x] = [];       
 		}
 		function recursiveFlipBoard(r, c){
-			if(visited[r][c] == "I") {
+			if(flipped[r][c] == "I") {
 				return 0;
 			}
-			visited[r][c] = "I";
+			flipped[r][c] = "I";
 			var sum = 1;
-			document.getElementsByClassName("row")[r].childNodes[c].style.background = "orange";
+			var color = getRandomColor();
+			var randomColor = color;
+			document.getElementsByClassName("row")[r].childNodes[c].style.background = randomColor;
 			setTimeout(
 				function(){
        				if (r-1>=0) {
-						document.getElementsByClassName("row")[r-1].childNodes[c].style.background = "pink";	
+						document.getElementsByClassName("row")[r-1].childNodes[c].style.background = randomColor;	
 						sum += recursiveFlipBoard(r-1, c);
 					}
 					if (r+1<=row) {
-						document.getElementsByClassName("row")[r+1].childNodes[c].style.background = "yellow";
+						document.getElementsByClassName("row")[r+1].childNodes[c].style.background = randomColor;
 						sum += recursiveFlipBoard(r+1, c);
 					}
 					if (c-1>=0) {
-						document.getElementsByClassName("row")[r].childNodes[c-1].style.background = "purple";
+						document.getElementsByClassName("row")[r].childNodes[c-1].style.background = randomColor;
 						sum += recursiveFlipBoard(r, c-1);
 					}
 					if (c+1<=col) {
-						document.getElementsByClassName("row")[r].childNodes[c+1].style.background = "blue";
+						document.getElementsByClassName("row")[r].childNodes[c+1].style.background = randomColor;
 						sum += recursiveFlipBoard(r, c+1);
 					}
        			}, (100)
