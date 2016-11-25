@@ -5,36 +5,40 @@
 	<link rel="stylesheet" type="text/css" href="board.css">
 </head>
 <body>
-	<div class="board"></div>
-	<div class="menu">
-		<div class="LEDMenu"></div>
-			<button onclick="LEDBoard()">LED</button>
-			<input type="text" value="#" name="colorLED" id="LEDcolor" 
-			onkeydown="if (event.keyCode == 13) document.getElementById('changeLEDColor').click()">
-            <button type="button" id="changeLEDColor" onclick="changeLEDColor()">GO</button>
-		</div>
-		<button onclick="WaveBoard()">WaveBoard</button>
-		<div class="drawMenu">
-			<button onclick="drawBoard()">Draw</button>
-			<button onclick="saveBoard()">Save</button>
+	<div class="container">
+		<div class="board"></div>
+		<div class="menu">
+			<div class="LEDMenu"></div>
+				<button onclick="LEDBoard()">LED</button>
+				<input type="text" value="#" name="colorLED" id="LEDcolor" 
+				onkeydown="if (event.keyCode == 13) document.getElementById('changeLEDColor').click()">
+	            <button type="button" id="changeLEDColor" onclick="changeLEDColor()">GO</button>
+			</div>
+			<button onclick="WaveBoard()">WaveBoard</button>
+			<button onclick="randomBoard()">RandomBoard</button>
+			<div class="drawMenu">
+				<button onclick="drawBoard()">Draw</button>
+				<button onclick="saveBoard()">Save</button>
+			</div>
 		</div>
 	</div>
-
 	<script type="text/javascript">
 		var colorOnClick = "pink";
 		var LEDcolor = "green";
 		var isDraw = false;
-		var row = 7;
-		var col = 15;
+		var isWaving = false;
+		var isBlinking = false;
+		var row = 10;
+		var col = 30;
 		var shape = [
 			//7*15
-			"000000000000000",
-			"010101000101110",
-			"010101010101000",
-			"011101010101000",
-			"001001010101000",
-			"001001111101110",
-			"000000000000000"
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,1,0,1,0,1,0,0,0,1,0,1,1,1,0],
+			[0,1,0,1,0,1,0,1,0,1,0,1,0,0,0],
+			[0,1,1,1,0,1,0,1,0,1,0,1,0,0,0],
+			[0,0,1,0,0,1,0,1,0,1,0,1,0,0,0],
+			[0,0,1,0,0,1,1,1,1,1,0,1,1,1,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 		];
 
 		function createBoard() {
@@ -55,6 +59,10 @@
 			}
 		}
 
+		//Fix it
+		//
+		//
+		//
 		function addClickListener() {
 			for (var i = 0; i < row; i++) {
 				for (var j = 0; j < col; j++) {
@@ -77,9 +85,8 @@
 
 		function render(shape, color) {
 			for (var i = 0; i < row; i++) {
-				var rowtemp = shape[i];
 				for (var j = 0; j < col; j++) {
-					var pos = rowtemp.charAt(j);
+					var pos =shape[i][j];
 					var box = document.getElementsByClassName("row")[i].childNodes;
 					if(pos == 1){
 						box[j].style.background=color;
@@ -90,55 +97,92 @@
 		}
 
 		function LEDBoard() {
-			for (var i = 0; i < row; i++) {
-				var rowtemp = shape[i];
-				for (var j = 0; j < col; j++) {
-					var pos = rowtemp.charAt(j);
-					var box = document.getElementsByClassName("row")[i].childNodes;
-					if(pos == 1){
-						box[j].style.background=LEDcolor;
-						box[j].style.animation = "flash 1s infinite linear";
-					}
+			var rowDiv = document.getElementsByClassName("row");
+			if(!isBlinking) {
+				for (var i = 0; i < row; i++) {
+					for (var j = 0; j < col; j++) {
+						var pos =shape[i][j];
+						if(pos == 1){
+							rowDiv[i].childNodes[j].style.background = LEDcolor;
+							rowDiv[i].childNodes[j].style.animation = "flash 1.8s infinite linear";
+						}
 
+					}
+					isBlinking = true;
+				}
+			} else {
+				isBlinking = false;
+				for (var i = 0; i < row; i++) {
+					for (var j = 0; j < col; j++) {
+						rowDiv[i].childNodes[j].style.animation = "";
+					}
 				}
 			}
+			
 		}
 
 		function WaveBoard() {
 			var rowDiv = document.getElementsByClassName("row");
-			for (var i = 0; i < row; i++) {
-			   	for (var j = 0; j < col; j++) {
-					(function(i,j) {
-						setTimeout(function(){
-			       			rowDiv[i].style.animation = "bounce 2s infinite linear";}, (100 * i)
-			       		);
-			       		setTimeout(function(){
-			       			rowDiv[i].childNodes[j].style.animation = "bounce 2s 2 linear";}, (500 * j)
-			       		);
-			   		})(i,j);
+			if (!isWaving){
+				for (var i = 0; i < row; i++) {
+				   	for (var j = 0; j < col; j++) {
+						(function(i,j) {
+							setTimeout(function(){
+				       			rowDiv[i].style.animation = "bounce 2s infinite linear";}, (100 * i)
+				       		);
+				       		setTimeout(function(){
+				       			rowDiv[i].childNodes[j].style.animation = "bounce 5s 2 linear";}, (500 * j)
+				       		);
+				   		})(i,j);
+					}
+				}
+				isWaving = true;
+			} else {
+				isWaving = false;
+				for (var i = 0; i < row; i++) {
+				   	for (var j = 0; j < col; j++) {
+						rowDiv[i].style.animation = "";
+				       	rowDiv[i].childNodes[j].style.animation = "";
+					}
 				}
 			}
-
-			// for (var i = 0; i < row; i++) {
-			// 	var rowDiv = document.getElementsByClassName("row")[i];
-
-			// 	var wait = function(){
-			// 		rowDiv.style.animation = "bounce 1s infinite linear";
-			// 	}
-			// 	setInterval( wait, 2000 );
-			// 	for (var j = 0; j < col; j++) {
-			// 		// rowDiv.childNodes[j].style.animation = "bounce 2s infinite linear";
-			// 	}
-			// }
 		}
 
 		function changeLEDColor(color){
 			LEDcolor = document.getElementById('LEDcolor').value;
+			isBlinking = false;
 			LEDBoard();
 		}
 		createBoard();
-		addClickListener();
+		// addClickListener();
 		render(shape, "red");
+
+		function randomBoard() {
+			var i = 0;
+			while (i<=1000) {
+
+				(function(i) {
+					setTimeout(function(){
+		       			var randomRow = Math.floor(Math.random() * row);
+						var randomCol = Math.floor(Math.random() * col);
+						var rowDiv = document.getElementsByClassName("row");
+						rowDiv[randomRow].childNodes[randomCol].style.background = getRandomColor();
+		       			}, (100 * i)
+		       		);
+				})(i);
+				i++;
+			}	
+		}
+
+		function getRandomColor() {
+		    var letters = '0123456789ABCDEF';
+		    var color = '#';
+		    for (var i = 0; i < 6; i++ ) {
+		        color += letters[Math.floor(Math.random() * 16)];
+		    }
+		    return color;
+		}
+
 	</script>
 </body>
 </html>
