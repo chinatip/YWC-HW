@@ -25,10 +25,9 @@
 				<button onclick="saveBoard()">Save</button>
 			</div>
 			<div class="shiftMenu">
-				<button onclick="shiftLeft()">Shift Left</button>
-				<button onclick="shiftRight()">Shift Right</button>
-				<button onclick="shiftUp()">Shift Up</button>
-				<button onclick="shiftDown()">Shift Down</button>
+				<button onclick="shift()">Shift</button>
+				<button onclick="shiftDirection = "left" ">Shift Left</button>
+				<button onclick="shiftDirection = "right" ">Shift Right</button>
 			</div>
 		</div>
 	</div>
@@ -39,6 +38,8 @@
 		var isUsingLEDBoard = false;
 		var isUsingRandomBoard = false;
 		var isRandomColorLED = false;
+		var isSwap = false;
+		var shiftDirection = "right";
 		var flipped = [];
 		var row = 7;
 		var col = 15;
@@ -64,6 +65,7 @@
 					var boxDiv = document.createElement("div");
 					boxDiv.className = "box";
 					boxDiv.id = boxID;
+					boxDiv.addEventListener("click", onClick);
 					rowDiv.appendChild(boxDiv);  
 				}
 				document.getElementsByClassName("board")[0].appendChild(rowDiv);
@@ -71,21 +73,9 @@
 			}
 		}
 
-		//Fix it
-		//
-		//
-		//
-		function addClickListener() {
-			for (var i = 0; i < row; i++) {
-				for (var j = 0; j < col; j++) {
-					var box = document.getElementsByClassName("row")[i].childNodes;
-					var boxID = box[j].id;
-					box[j].addEventListener("click", 
-						function (boxID) {
-							document.getElementById(boxID).style.background = "yellow";
-					});
-				}
-			}
+		function onClick(e) {
+			console.log(e);
+			document.getElementById(e.target.id).style.background = "yellow";
 		}
 
 		function drawBoard() {
@@ -193,7 +183,6 @@
 								var rowDiv = document.getElementsByClassName("row");
 								if (randomRow != 1 && randomCol != 1) {
 									rowDiv[randomRow].childNodes[randomCol].style.background = getRandomColor();
-									console.log(randomRow+", "+randomCol);
 								}
 			       			}, (100 * i)
 			       		);
@@ -227,10 +216,6 @@
 			var sum = recursiveFlipBoard(randomRow, randomCol);
 		}
 
-		var flipped = [];
-		for (var x = 0; x < row; x++){
-		    flipped[x] = [];       
-		}
 		function recursiveFlipBoard(r, c){
 			if (flipped[r][c] == "I") {
 				return 0;
@@ -263,6 +248,8 @@
 			return sum;
 		}
 		function swapBoard() {
+			if (isSwap == true) isSwap = false;
+			else isSwap = true;
 			for (var i = 0; i < shape.length; i++) {
 				for (var j = 0; j < shape[0].length; j++) {
 					if (shape[i][j] == 0) shape[i][j] = 1;
@@ -275,40 +262,53 @@
 		function clearAll() {
 			isUsingWaveBoard = true;
 			isUsingLEDBoard = true;
+			if(isSwap) swapBoard();
 			WaveBoard();
 			LEDBoard();
 			render();
+		}
+
+		function shift() {
+			var shiftBox;
+			var i = 0;
+			while (i<=col) {
+				(function(i) {
+					shiftBox = setTimeout(
+						function(){
+							getShift();
+							render();
+		       			}, (100 * i)
+		       		);
+				})(i);
+				i++;
+			}
+		}
+
+		function changeShiftDirection(direction){
+			shiftDirection = direction;
+		}
+
+		function getShift() {
+			if (shiftDirection == "left") {
+				shiftLeft();
+			} else {
+				shiftRight();
+			}
 		}
 
 		function shiftLeft() {
 			for (var i = 0; i < row; i++) {
 				shape[i].push(shape[i].shift());
 			}
-			render();
 		}
 
 		function shiftRight() {
 			for (var i = 0; i < row; i++) {
 				shape[i] = [shape[i].pop()].concat(shape[i]);
 			}
-			render();
 		}
 
-		function shiftUp() {
-			for (var i = 0; i < row; i++) {
-				
-			}
-			render();
-		}
-
-		function shiftDown() {
-			for (var i = 0; i < row; i++) {
-				
-			}
-			render();
-		}
 		createBoard();
-		addClickListener();
 		render();
 	</script>
 </body>
