@@ -170,18 +170,22 @@
 			LEDBoard();
 		}
 
+		function checkShape(i, j) {
+			return shape[i][j] == 0;
+		}
+
 		function randomBoard() {
 			var randomBackground;
 			if (!isUsingRandomBoard) {
 				var i = 0;
 				while (i<=1000) {
 					(function(i) {
-						randomBackground = setTimeout(
+						randomBackground = setInterval(
 							function(){
 				       			var randomRow = Math.floor(Math.random() * row);
 								var randomCol = Math.floor(Math.random() * col);
 								var rowDiv = document.getElementsByClassName("row");
-								if (randomRow != 1 && randomCol != 1) {
+								if (checkShape(randomRow, randomCol)) {
 									rowDiv[randomRow].childNodes[randomCol].style.background = getRandomColor();
 								}
 			       			}, (100 * i)
