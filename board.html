@@ -24,6 +24,12 @@
 				<button onclick="drawBoard()">Draw</button>
 				<button onclick="saveBoard()">Save</button>
 			</div>
+			<div class="shiftMenu">
+				<button onclick="shiftLeft()">Shift Left</button>
+				<button onclick="shiftRight()">Shift Right</button>
+				<button onclick="shiftUp()">Shift Up</button>
+				<button onclick="shiftDown()">Shift Down</button>
+			</div>
 		</div>
 	</div>
 	<script type="text/javascript">
@@ -34,8 +40,8 @@
 		var isUsingRandomBoard = false;
 		var isRandomColorLED = false;
 		var flipped = [];
-		var row = 10;
-		var col = 30;
+		var row = 7;
+		var col = 15;
 		var shape = [
 			//7*15
 			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -73,10 +79,10 @@
 			for (var i = 0; i < row; i++) {
 				for (var j = 0; j < col; j++) {
 					var box = document.getElementsByClassName("row")[i].childNodes;
+					var boxID = box[j].id;
 					box[j].addEventListener("click", 
-						function () {
-							alert("You click me");
-							// document.getElementById(boxID).style.animation = "flash 1s 1 linear";
+						function (boxID) {
+							document.getElementById(boxID).style.background = "yellow";
 					});
 				}
 			}
@@ -95,7 +101,8 @@
 				for (var j = 0; j < col; j++) {
 					var pos = shape[i][j];
 					var box = document.getElementsByClassName("row")[i].childNodes;
-					if(pos == 1){
+					var color;
+					if (pos == 1){
 						box[j].style.background = "red";
 					} else {
 						box[j].style.background = "black";
@@ -107,14 +114,15 @@
 
 		function LEDBoard() {
 			var rowDiv = document.getElementsByClassName("row");
-			if(isRandomColorLED) {
+			if (isRandomColorLED) {
 				var LEDcolor = getRandomColor();
+				isRandomColorLED = false;
 			}
-			if(!isUsingLEDBoard) {
+			if (!isUsingLEDBoard) {
 				for (var i = 0; i < row; i++) {
 					for (var j = 0; j < col; j++) {
 						var pos =shape[i][j];
-						if(pos == 1){
+						if (pos == 1){
 							rowDiv[i].childNodes[j].style.background = LEDcolor;
 							rowDiv[i].childNodes[j].style.animation = "flash 1.8s infinite linear";
 						}
@@ -174,7 +182,7 @@
 
 		function randomBoard() {
 			var randomBackground;
-			if(!isUsingRandomBoard) {
+			if (!isUsingRandomBoard) {
 				var i = 0;
 				while (i<=1000) {
 					(function(i) {
@@ -183,7 +191,7 @@
 				       			var randomRow = Math.floor(Math.random() * row);
 								var randomCol = Math.floor(Math.random() * col);
 								var rowDiv = document.getElementsByClassName("row");
-								if(randomRow != 1 && randomCol != 1) {
+								if (randomRow != 1 && randomCol != 1) {
 									rowDiv[randomRow].childNodes[randomCol].style.background = getRandomColor();
 									console.log(randomRow+", "+randomCol);
 								}
@@ -213,18 +221,18 @@
 			var randomRow = Math.floor(Math.random() * row);
 			var randomCol = Math.floor(Math.random() * col);
 			flipped = [];
-				for(var x = 0; x < row; x++){
+				for (var x = 0; x < row; x++){
 				    flipped[x] = [];       
 			}
 			var sum = recursiveFlipBoard(randomRow, randomCol);
 		}
 
 		var flipped = [];
-		for(var x = 0; x < row; x++){
+		for (var x = 0; x < row; x++){
 		    flipped[x] = [];       
 		}
 		function recursiveFlipBoard(r, c){
-			if(flipped[r][c] == "I") {
+			if (flipped[r][c] == "I") {
 				return 0;
 			}
 			flipped[r][c] = "I";
@@ -234,21 +242,21 @@
 			document.getElementsByClassName("row")[r].childNodes[c].style.background = randomColor;
 			setTimeout(
 				function(){
-       				if (r-1>=0) {
-						document.getElementsByClassName("row")[r-1].childNodes[c].style.background = randomColor;	
-						sum += recursiveFlipBoard(r-1, c);
+       				if (r - 1 >= 0) {
+						document.getElementsByClassName("row")[r - 1].childNodes[c].style.background = randomColor;	
+						sum += recursiveFlipBoard(r - 1, c);
 					}
-					if (r+1<=row) {
-						document.getElementsByClassName("row")[r+1].childNodes[c].style.background = randomColor;
-						sum += recursiveFlipBoard(r+1, c);
+					if (r + 1 <= row) {
+						document.getElementsByClassName("row")[r + 1].childNodes[c].style.background = randomColor;
+						sum += recursiveFlipBoard(r + 1, c);
 					}
-					if (c-1>=0) {
-						document.getElementsByClassName("row")[r].childNodes[c-1].style.background = randomColor;
-						sum += recursiveFlipBoard(r, c-1);
+					if (c - 1 >= 0) {
+						document.getElementsByClassName("row")[r].childNodes[c - 1].style.background = randomColor;
+						sum += recursiveFlipBoard(r, c - 1);
 					}
-					if (c+1<=col) {
-						document.getElementsByClassName("row")[r].childNodes[c+1].style.background = randomColor;
-						sum += recursiveFlipBoard(r, c+1);
+					if (c + 1 <= col) {
+						document.getElementsByClassName("row")[r].childNodes[c + 1].style.background = randomColor;
+						sum += recursiveFlipBoard(r, c + 1);
 					}
        			}, (100)
        		);		
@@ -257,7 +265,7 @@
 		function swapBoard() {
 			for (var i = 0; i < shape.length; i++) {
 				for (var j = 0; j < shape[0].length; j++) {
-					if(shape[i][j] == 0) shape[i][j] = 1;
+					if (shape[i][j] == 0) shape[i][j] = 1;
 					else shape[i][j] = 0;
 				}
 			}
@@ -272,8 +280,43 @@
 			render();
 		}
 
+		function shiftLeft() {
+			for (var i = 0; i < row; i++) {
+				shape[i].push(shape[i].shift());
+			}
+			render();
+		}
+
+		function shiftRight() {
+			for (var i = 0; i < row; i++) {
+				shape[i] = [shape[i].pop()].concat(shape[i]);
+			}
+			render();
+		}
+
+		function shiftUp() {
+			var temp = shape;
+			for (var i = 0; i < row; i++) {
+				if (i == row-1) {
+					shape[i] = temp[0];
+				}
+				shape[i] = temp[i+1];
+			}
+			render();
+		}
+
+		function shiftDown() {
+			var temp = shape;
+			for (var i = 0; i < row; i++) {
+				if (i == 0) {
+					shape[i] = temp[row-1];
+				}
+				shape[i] = temp[i-1];
+			}
+			render();
+		}
 		createBoard();
-		// addClickListener();
+		addClickListener();
 		render();
 	</script>
 </body>
