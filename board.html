@@ -6,25 +6,25 @@
 </head>
 <body>
 	<div class="container">
-		<div class="board"></div>
-		<div class="menu">
-			<div class="LEDMenu"></div>
-				<button onclick="LEDBoard()">LED</button>
-				<button onclick="randomColorLED()">Random color</button>
-				<input type="color" value="#40c744" name="colorLED" id="LEDcolor" 
-				onChange="onChangeColor()">
+			<div class="board"></div>
+		
+			<div class="menu">
+				<div class="LEDMenu">
+					<button onclick="LEDBoard()">LED</button>
+					<button onclick="randomColorLED()">Random color</button>
+					<input type="color" value="#40c744" name="colorLED" id="LEDcolor" 
+					onChange="onChangeColor()">
+				</div>
+				<button onclick="WaveBoard()">Wave Board</button>
+				<button onclick="randomBoard()">Random Board</button>
+				<button onclick="flipBoard()">Flip Board</button>
+				<button onclick="swapBoard()">Swap Board</button>
+				<button onclick="clearAll()">Clear All</button>
+				<div class="shiftMenu">
+					<button onclick="shiftLeft()" ">Shift Left</button>
+					<button onclick="shiftRight()">Shift Right</button>
+				</div>
 			</div>
-			<button onclick="WaveBoard()">Wave Board</button>
-			<button onclick="randomBoard()">Random Board</button>
-			<button onclick="flipBoard()">Flip Board</button>
-			<button onclick="swapBoard()">Swap Board</button>
-			<button onclick="clearAll()">Clear All</button>
-			<div class="shiftMenu">
-				<button onclick="shiftLeft()" ">Shift Left</button>
-				<button onclick="shiftRight()">Shift Right</button>
-			</div>
-		</div>
-	</div>
 	<script type="text/javascript">
 		var colorOnClick = "pink";
 		var isUsingWaveBoard = false;
@@ -351,12 +351,12 @@
 			for (var i = 0; i < row; i++) {
 				shape[i] = [shape[i].pop()].concat(shape[i]);
 			}
-			render();
 			if(isUsingLEDBoard) {
 				clearAnimationCol();
 				isUsingLEDBoard = false;
 				LEDBoard();
 			}
+			render();
 		}
 		shapeColor = defaultColor;
 		createBoard();
