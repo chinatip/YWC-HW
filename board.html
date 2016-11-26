@@ -183,15 +183,24 @@
 				isUsingWaveBoard = true;
 			} else {
 				isUsingWaveBoard = false;
-				clearAnimation()
+				clearAnimationRowCol()
 					  				
 			}
 		}
 
-		function clearAnimation() {
+		function clearAnimationRowCol() {
 			var rowDiv = document.getElementsByClassName("row");
 			for (var i = 0; i < row; i++) {
 				rowDiv[i].style.animation = "";
+ 				for (var j = 0; j < col; j++) {
+ 					rowDiv[i].childNodes[j].style.animation = "";
+ 				}
+  			}
+		}
+
+		function clearAnimationCol() {
+			var rowDiv = document.getElementsByClassName("row");
+			for (var i = 0; i < row; i++) {
  				for (var j = 0; j < col; j++) {
  					rowDiv[i].childNodes[j].style.animation = "";
  				}
@@ -331,6 +340,11 @@
 				shape[i].push(shape[i].shift());
 			}
 			render();
+			if(isUsingLEDBoard) {
+				clearAnimationCol();
+				isUsingLEDBoard = false;
+				LEDBoard();
+			}
 		}
 
 		function shiftRight() {
@@ -338,6 +352,11 @@
 				shape[i] = [shape[i].pop()].concat(shape[i]);
 			}
 			render();
+			if(isUsingLEDBoard) {
+				clearAnimationCol();
+				isUsingLEDBoard = false;
+				LEDBoard();
+			}
 		}
 		shapeColor = defaultColor;
 		createBoard();
