@@ -27,26 +27,41 @@
 	</div>
 	<script type="text/javascript">
 		var colorOnClick = "pink";
-		var LEDcolor = "green";
 		var isUsingWaveBoard = false;
 		var isUsingLEDBoard = false;
 		var isUsingRandomBoard = false;
 		var isRandomColorLED = false;
 		var isSwap = false;
-		var defaultColor = "green";
+		var defaultColor = "#FFFF00";
+		var LEDcolor = defaultColor;
 		var shapeColor;
 		var flipped = [];
-		var row = 7;
-		var col = 15;
+		var row = 22;
+		var col = 44;
 		var shape = [
-			//7*15
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			[0,1,0,1,0,1,0,0,0,1,0,1,1,1,0],
-			[0,1,0,1,0,1,0,1,0,1,0,1,0,0,0],
-			[0,1,1,1,0,1,0,1,0,1,0,1,0,0,0],
-			[0,0,1,0,0,1,0,1,0,1,0,1,0,0,0],
-			[0,0,1,0,0,1,1,1,1,1,0,1,1,1,0],
-			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+		//22*40
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
+			[0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
+			[0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
+			[0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
+			[0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
+			[0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 		];
 
 		function createBoard() {
@@ -69,6 +84,15 @@
 			}
 		}
 
+		function deleteBoard() {
+			for (var i = 0; i < row; i++) {
+				var node = document.getElementsByClassName("row")[i];
+				while (node.firstChild) {
+			    	node.removeChild(node.firstChild);
+				}
+			}
+		}
+
 		function onClick(e) {
 			console.log(document.getElementById(e.target.id));
 			document.getElementById(e.target.id).style.background = "yellow";
@@ -80,7 +104,7 @@
 			var rowPos = arr[1];
 			var colPos = arr[2];
 			for (var i = 0; i< row; i++) {
-				document.getElementsByClassName("row")[i].childNodes[colPos].style.animation = "";
+				
 				document.getElementsByClassName("row")[i].childNodes[colPos].style.animation = "bounce 1s 1 linear";
 				
 			}
@@ -140,30 +164,38 @@
 		}
 
 		function WaveBoard() {
+			var animate;
 			var rowDiv = document.getElementsByClassName("row");
 			if (!isUsingWaveBoard){
 				for (var i = 0; i < row; i++) {
 				   	for (var j = 0; j < col; j++) {
 						(function(i,j) {
-							setTimeout(function(){
-				       			rowDiv[i].style.animation = "bounce 2s infinite linear";}, (100 * i)
+							animate = setTimeout(function(){
+				       			rowDiv[i].style.animation = "bounce 2s infinite linear";}, (10 * i)
 				       		);
-				       		setTimeout(function(){
-				       			rowDiv[i].childNodes[j].style.animation = "bounce 5s 2 linear";}, (500 * j)
+				       		animate = setTimeout(function(){
+				       			rowDiv[i].childNodes[j].style.animation = "bounce 5s 2 linear";}, (50 * j)
 				       		);
+				       		
 				   		})(i,j);
 					}
 				}
 				isUsingWaveBoard = true;
 			} else {
 				isUsingWaveBoard = false;
-				for (var i = 0; i < row; i++) {
-				   	for (var j = 0; j < col; j++) {
-						rowDiv[i].style.animation = "";
-				       	rowDiv[i].childNodes[j].style.animation = "";
-					}
-				}
+				clearAnimation()
+					  				
 			}
+		}
+
+		function clearAnimation() {
+			var rowDiv = document.getElementsByClassName("row");
+			for (var i = 0; i < row; i++) {
+				rowDiv[i].style.animation = "";
+ 				for (var j = 0; j < col; j++) {
+ 					rowDiv[i].childNodes[j].style.animation = "";
+ 				}
+  			}
 		}
 
 		function onChangeColor(color){
@@ -187,7 +219,7 @@
 						if (checkShape(randomRow, randomCol)) {
 							rowDiv[randomRow].childNodes[randomCol].style.background = getRandomColor();
 						}
-	       			}, (100 * 5)
+	       			}, (10 * 7)
 	       		);
 				isUsingRandomBoard = true;
 			} else {
@@ -270,6 +302,7 @@
 			WaveBoard();
 			LEDBoard();
 			shapeColor = defaultColor;
+			
 			render();
 		}
 
